@@ -34,22 +34,22 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">
       {/* Left branded panel */}
-      <div className="bg-gradient-to-br from-clinical-700 to-clinical-900 flex-shrink-0 lg:w-1/2 flex flex-col justify-between px-8 py-10 sm:px-12 sm:py-12 lg:px-16 lg:py-12">
+      <div className="bg-gradient-to-br from-blue-600 to-blue-700 flex-shrink-0 lg:w-1/2 flex flex-col justify-between px-8 py-10 sm:px-12 sm:py-12 lg:px-16 lg:py-12">
         <div>
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-clinical-600 mb-8">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-white/20 mb-8">
             <Activity className="w-7 h-7 text-white" />
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">HTA Cloud</h1>
-          <p className="text-clinical-200 text-lg font-medium mb-6">CardioPressure Cloud</p>
-          <p className="text-clinical-300 text-sm leading-relaxed max-w-md">
+          <p className="text-blue-100 text-lg font-medium mb-6">CardioPressure Cloud</p>
+          <p className="text-blue-100/90 text-sm leading-relaxed max-w-md">
             Plataforma cloud para la clasificacion y seguimiento del riesgo de hipertension arterial
           </p>
         </div>
 
         <div className="mt-10">
-          <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-clinical-800/50 border border-clinical-600/30">
-            <Activity className="w-3.5 h-3.5 text-clinical-300" />
-            <span className="text-clinical-200 text-xs font-medium">
+          <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/15 border border-white/20">
+            <Activity className="w-3.5 h-3.5 text-blue-100/90" />
+            <span className="text-blue-100 text-xs font-medium">
               Acceso exclusivo para personal sanitario
             </span>
           </div>

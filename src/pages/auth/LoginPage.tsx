@@ -62,7 +62,7 @@ export default function LoginPage() {
           <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/15 border border-white/20">
             <Shield className="w-3.5 h-3.5 text-white" />
             <span className="text-white text-xs font-medium">
-              Acceso exclusivo para personal sanitario
+              Acceso exclusivo para personal medico
             </span>
           </div>
         </div>
@@ -131,7 +131,7 @@ export default function LoginPage() {
               </Link>
             </p>
           </div>
-          
+
         </div>
       </div>
     </div>

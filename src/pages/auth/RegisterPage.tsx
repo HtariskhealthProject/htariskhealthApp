@@ -50,7 +50,7 @@ export default function RegisterPage() {
           <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/15 border border-white/20">
             <Activity className="w-3.5 h-3.5 text-blue-100/90" />
             <span className="text-blue-100 text-xs font-medium">
-              Acceso exclusivo para personal sanitario
+              Acceso exclusivo para personal medico
             </span>
           </div>
         </div>

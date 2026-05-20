@@ -46,7 +46,7 @@ export default function Sidebar({ open, onClose }: Props) {
       )}
 
       <aside
-        className={`fixed top-0 left-0 z-50 h-full w-[260px] bg-white border-r border-slate-200 transform transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:z-auto flex flex-col ${
+        className={`fixed top-0 left-0 z-50 h-full w-[260px] bg-[#0E273F] border-r border-[#0E273F] transform transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:z-auto flex flex-col ${
           open ? 'translate-x-0' : '-translate-x-full'
         }`}
       >

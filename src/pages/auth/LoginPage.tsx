@@ -88,20 +88,18 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="input-clinical"
-                placeholder="dr.martinez@hta-risk.com"
                 required
               />
             </div>
 
             <div>
-              <label className="label-clinical">Contrasena</label>
+              <label className="label-clinical">Contraseña</label>
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="input-clinical pr-10"
-                  placeholder="demo123"
                   required
                 />
                 <button

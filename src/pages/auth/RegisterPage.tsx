@@ -92,7 +92,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="label-clinical">Contrasena</label>
+              <label className="label-clinical">Contraseña</label>
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}

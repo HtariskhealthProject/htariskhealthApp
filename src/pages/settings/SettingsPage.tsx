@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { Settings, User, Shield, Database, Cloud, Server, Save, X } from 'lucide-react';
+import { Settings, User, Save, X } from 'lucide-react';
 import PageHeader from '../../components/ui/PageHeader';
 import SectionCard from '../../components/ui/SectionCard';
 import ClinicalAlert from '../../components/ui/ClinicalAlert';
@@ -30,7 +30,7 @@ export default function SettingsPage() {
       <div className="max-w-4xl mx-auto space-y-6">
         <PageHeader
           title="Configuracion"
-          subtitle="Perfil del profesional y datos del sistema"
+          subtitle="Perfil del profesional"
           icon={<Settings className="w-5 h-5" />}
         />
 
@@ -123,85 +123,6 @@ export default function SettingsPage() {
           )}
         </SectionCard>
 
-        {/* System Info Section */}
-        <SectionCard
-          title="Informacion del Sistema"
-          icon={<Server className="w-4 h-4" />}
-        >
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* System Name */}
-            <div className="flex items-start gap-3">
-              <div className="mt-0.5 p-2 bg-clinical-50 rounded-lg">
-                <Server className="w-4 h-4 text-clinical-600" />
-              </div>
-              <div>
-                <p className="label-clinical">Sistema</p>
-                <p className="text-slate-800 font-medium">HTA Cloud</p>
-              </div>
-            </div>
-
-            {/* Supabase Cloud Status */}
-            <div className="flex items-start gap-3">
-              <div className="mt-0.5 p-2 bg-clinical-50 rounded-lg">
-                <Cloud className="w-4 h-4 text-clinical-600" />
-              </div>
-              <div>
-                <p className="label-clinical">Supabase Cloud</p>
-                <div className="flex items-center gap-2 mt-1">
-                  <span className="relative flex h-2.5 w-2.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
-                  </span>
-                  <span className="text-sm font-medium text-emerald-600">Conectado</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Database */}
-            <div className="flex items-start gap-3">
-              <div className="mt-0.5 p-2 bg-clinical-50 rounded-lg">
-                <Database className="w-4 h-4 text-clinical-600" />
-              </div>
-              <div>
-                <p className="label-clinical">Base de datos</p>
-                <p className="text-slate-800 font-medium">PostgreSQL (Supabase Cloud)</p>
-              </div>
-            </div>
-
-            {/* Authentication */}
-            <div className="flex items-start gap-3">
-              <div className="mt-0.5 p-2 bg-clinical-50 rounded-lg">
-                <Shield className="w-4 h-4 text-clinical-600" />
-              </div>
-              <div>
-                <p className="label-clinical">Autenticacion</p>
-                <p className="text-slate-800 font-medium">Supabase Auth</p>
-              </div>
-            </div>
-
-            {/* Storage */}
-            <div className="flex items-start gap-3">
-              <div className="mt-0.5 p-2 bg-clinical-50 rounded-lg">
-                <Database className="w-4 h-4 text-clinical-600" />
-              </div>
-              <div>
-                <p className="label-clinical">Almacenamiento</p>
-                <p className="text-slate-800 font-medium">Supabase Storage</p>
-              </div>
-            </div>
-
-            {/* Version */}
-            <div className="flex items-start gap-3">
-              <div className="mt-0.5 p-2 bg-clinical-50 rounded-lg">
-                <Server className="w-4 h-4 text-clinical-600" />
-              </div>
-              <div>
-                <p className="label-clinical">Version</p>
-                <p className="text-slate-800 font-medium">1.0.0</p>
-              </div>
-            </div>
-          </div>
-        </SectionCard>
       </div>
     </div>
   );

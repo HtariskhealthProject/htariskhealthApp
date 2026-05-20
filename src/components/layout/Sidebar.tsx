@@ -10,8 +10,7 @@ import {
   Settings,
   LogOut,
   X,
-  Activity,
-  Cloud,
+  Activity
 } from 'lucide-react';
 
 interface Props {
@@ -26,7 +25,6 @@ const navItems = [
   { to: '/history', label: 'Historial', icon: History },
   { to: '/reports', label: 'Reportes', icon: FileBarChart },
   { to: '/recommendations', label: 'Recomendaciones', icon: Lightbulb },
-  { to: '/cloud-architecture', label: 'Arquitectura Cloud', icon: Cloud },
   { to: '/settings', label: 'Configuracion', icon: Settings },
 ];
 

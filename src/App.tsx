@@ -13,7 +13,6 @@ import HistoryPage from './pages/history/HistoryPage';
 import ReportsPage from './pages/reports/ReportsPage';
 import RecommendationsPage from './pages/recommendations/RecommendationsPage';
 import SettingsPage from './pages/settings/SettingsPage';
-import CloudArchitecturePage from './pages/cloud/CloudArchitecturePage';
 
 function App() {
   return (
@@ -42,7 +41,6 @@ function App() {
             <Route path="/reports" element={<ReportsPage />} />
             <Route path="/recommendations" element={<RecommendationsPage />} />
             <Route path="/settings" element={<SettingsPage />} />
-            <Route path="/cloud-architecture" element={<CloudArchitecturePage />} />
           </Route>
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>

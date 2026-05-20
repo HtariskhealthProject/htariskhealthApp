@@ -131,12 +131,7 @@ export default function LoginPage() {
               </Link>
             </p>
           </div>
-
-          <div className="mt-6 p-4 rounded-lg bg-slate-100 border border-slate-200 text-xs text-slate-500">
-            <p className="font-medium text-slate-600 mb-1.5">Credenciales de prueba:</p>
-            <p>Medico: dr.martinez@hta-risk.com / demo123</p>
-            <p>Enfermera: enfermera.garcia@hta-risk.com / demo123</p>
-          </div>
+          
         </div>
       </div>
     </div>

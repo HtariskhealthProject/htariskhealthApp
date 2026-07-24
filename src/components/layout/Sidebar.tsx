@@ -44,7 +44,7 @@ export default function Sidebar({ open, onClose }: Props) {
       )}
 
       <aside
-        className={`fixed top-0 left-0 z-50 h-full w-[260px] bg-white border-r border-slate-200 transform transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:z-auto flex flex-col ${
+        className={`fixed top-0 left-0 z-50 h-full w-[260px] bg-[#F8FBFF] border-r border-clinical-100 transform transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:z-auto flex flex-col ${
         open ? 'translate-x-0' : '-translate-x-full'
       }`}
       >
@@ -52,15 +52,22 @@ export default function Sidebar({ open, onClose }: Props) {
         <div className="px-5 py-5 border-b border-slate-100">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-clinical-600 flex items-center justify-center">
-                <Activity className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <h1 className="text-base font-bold text-slate-900 tracking-tight">HTA Cloud</h1>
-                <p className="text-[10px] text-slate-400 font-medium tracking-wide uppercase">
-                  CardioPressure Monitor
-                </p>
-              </div>
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-clinical-500 to-clinical-700 shadow-md flex items-center justify-center">
+  <Activity className="w-5 h-5 text-white" />
+</div>
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-clinical-500 to-clinical-700 shadow-md flex items-center justify-center">
+  <Activity className="w-5 h-5 text-white" />
+</div>
+
+<div>
+  <h1 className="text-lg font-bold text-clinical-800 tracking-tight">
+    HTA Cloud
+  </h1>
+
+  <p className="text-[11px] text-clinical-400 font-semibold tracking-wide uppercase">
+    CardioPressure Monitor
+  </p>
+</div>
             </div>
             <button onClick={onClose} className="lg:hidden p-1 rounded-lg hover:bg-slate-100 text-slate-400">
               <X className="w-5 h-5" />
@@ -81,7 +88,7 @@ export default function Sidebar({ open, onClose }: Props) {
               className={({ isActive }) =>
                 `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                   isActive
-                    ? 'bg-clinical-50 text-clinical-700'
+                    ? 'bg-clinical-50 text-clinical-700 shadow-sm border border-clinical-200'
                     : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                 }`
               }

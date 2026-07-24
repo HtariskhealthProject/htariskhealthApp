@@ -40,7 +40,8 @@ import {
 } from '../../types';
 import { formatDateTime, formatBP } from '../../utils/formatters';
 import { classifyBloodPressure } from '../../utils/classification';
-import { getPatientName } from '../../data/mockData';
+import { PatientService } from '../../services/PatientService';
+import { Patient } from '../../types';
 
 const CATEGORY_COLORS: Record<BPCategory, string> = {
   normal: '#16a34a',
@@ -55,6 +56,7 @@ const DashboardPage: React.FC = () => {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [recentReadings, setRecentReadings] = useState<BloodPressureReading[]>([]);
   const [criticalReadings, setCriticalReadings] = useState<BloodPressureReading[]>([]);
+  const [patients, setPatients] = useState<Patient[]>([]);
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -62,15 +64,18 @@ const DashboardPage: React.FC = () => {
     const fetchDashboardData = async () => {
       try {
         setLoading(true);
-        const [dashboardStats, recent, critical, auditData] = await Promise.all([
-          ReportService.getDashboardStats(),
-          ReadingHistoryService.getRecent(5),
-          ReadingHistoryService.getCritical(),
-          AuditService.getRecent(8),
+        const [dashboardStats, recent, critical, auditData, patientsData] =
+        await Promise.all([
+            ReportService.getDashboardStats(),
+            ReadingHistoryService.getRecent(5),
+            ReadingHistoryService.getCritical(),
+            AuditService.getRecent(8),
+            PatientService.getAll(),
         ]);
         setStats(dashboardStats);
         setRecentReadings(recent);
         setCriticalReadings(critical);
+        setPatients(patientsData);
         setAuditLogs(auditData);
       } catch (error) {
         console.error('Error loading dashboard data:', error);
@@ -124,6 +129,14 @@ const DashboardPage: React.FC = () => {
       `${stats.criticalReadings} caso${stats.criticalReadings !== 1 ? 's' : ''} critico${stats.criticalReadings !== 1 ? 's' : ''} activo${stats.criticalReadings !== 1 ? 's' : ''}`,
     ];
   }, [stats]);
+
+  const getPatientName = (patientId: string) => {
+  const patient = patients.find(p => p.id === patientId);
+
+  if (!patient) return "Desconocido";
+
+  return `${patient.first_name} ${patient.last_name}`;
+};
 
   if (loading) {
     return (

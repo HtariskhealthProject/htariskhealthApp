@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ReadingHistoryService } from '../../services/ReadingHistoryService';
-import type { BloodPressureReading, BPCategory } from '../../types';
+import type { BloodPressureReading, BPCategory, Patient } from '../../types';
 import { BP_CATEGORY_LABELS } from '../../types';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import PageHeader from '../../components/ui/PageHeader';
@@ -11,7 +11,7 @@ import TrendChartCard from '../../components/ui/TrendChartCard';
 import RecordTimeline from '../../components/ui/RecordTimeline';
 import EmptyState from '../../components/ui/EmptyState';
 import { formatDateTime, formatBP, CONTEXT_LABELS } from '../../utils/formatters';
-import { getPatientName } from '../../data/mockData';
+import { PatientService } from '../../services/PatientService';
 import {
   LineChart,
   Line,
@@ -37,26 +37,43 @@ const CATEGORY_COLORS: Record<BPCategory, string> = {
 
 export default function HistoryPage() {
   const [readings, setReadings] = useState<BloodPressureReading[]>([]);
+  const [patients, setPatients] = useState<Patient[]>([]);
   const [loading, setLoading] = useState(true);
   const [patientSearch, setPatientSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
 
-  useEffect(() => {
-    const fetchReadings = async () => {
-      try {
-        setLoading(true);
-        const data = await ReadingHistoryService.getAll();
-        setReadings(data);
-      } catch (error) {
-        console.error('Error loading readings:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchReadings();
-  }, []);
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+
+      const [readingData, patientData] = await Promise.all([
+        ReadingHistoryService.getAll(),
+        PatientService.getAll(),
+      ]);
+
+      setReadings(readingData);
+      setPatients(patientData);
+
+    } catch (error) {
+      console.error('Error loading data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchData();
+}, []);
+
+const getPatientName = (patientId: string) => {
+  const patient = patients.find((p) => p.id === patientId);
+
+  return patient
+    ? `${patient.first_name} ${patient.last_name}`
+    : 'Desconocido';
+};
 
   const filteredReadings = readings.filter((reading) => {
     if (patientSearch) {

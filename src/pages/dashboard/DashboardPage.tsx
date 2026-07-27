@@ -9,7 +9,6 @@ import EmptyState from '../../components/ui/EmptyState';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import { ReportService } from '../../services/ReportService';
 import { ReadingHistoryService } from '../../services/ReadingHistoryService';
-import { AuditService, AUDIT_ACTION_LABELS } from '../../services/AuditService';
 import {
   BarChart,
   Bar,
@@ -20,6 +19,8 @@ import {
   ResponsiveContainer,
   PieChart,
   Pie,
+  Legend,
+  LabelList,
   Cell,
 } from 'recharts';
 import {
@@ -29,14 +30,12 @@ import {
   Activity,
   LayoutDashboard,
   TrendingUp,
-  ClipboardList,
 } from 'lucide-react';
 import {
   DashboardStats,
   BloodPressureReading,
   BPCategory,
   BP_CATEGORY_LABELS,
-  AuditLog,
 } from '../../types';
 import { formatDateTime, formatBP } from '../../utils/formatters';
 import { classifyBloodPressure } from '../../utils/classification';
@@ -57,26 +56,23 @@ const DashboardPage: React.FC = () => {
   const [recentReadings, setRecentReadings] = useState<BloodPressureReading[]>([]);
   const [criticalReadings, setCriticalReadings] = useState<BloodPressureReading[]>([]);
   const [patients, setPatients] = useState<Patient[]>([]);
-  const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
         setLoading(true);
-        const [dashboardStats, recent, critical, auditData, patientsData] =
+        const [dashboardStats, recent, critical, patientsData] =
         await Promise.all([
             ReportService.getDashboardStats(),
             ReadingHistoryService.getRecent(5),
             ReadingHistoryService.getCritical(),
-            AuditService.getRecent(8),
             PatientService.getAll(),
         ]);
         setStats(dashboardStats);
         setRecentReadings(recent);
         setCriticalReadings(critical);
         setPatients(patientsData);
-        setAuditLogs(auditData);
       } catch (error) {
         console.error('Error loading dashboard data:', error);
       } finally {
@@ -209,19 +205,22 @@ const DashboardPage: React.FC = () => {
         >
           {categoryBarData.length > 0 ? (
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={categoryBarData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+              <BarChart
+                layout="vertical"
+                data={categoryBarData}
+                margin={{ top: 10, right: 30, left: 40, bottom: 10 }}
+              >
                 <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                 <XAxis
-                  dataKey="name"
-                  tick={{ fontSize: 12, fill: '#64748b' }}
-                  interval={0}
-                  angle={-20}
-                  textAnchor="end"
-                  height={60}
-                />
-                <YAxis
-                  tick={{ fontSize: 12, fill: '#64748b' }}
+                  type="number"
                   allowDecimals={false}
+                />
+
+                <YAxis
+                  type="category"
+                  dataKey="name"
+                  width={150}
+                  tick={{ fontSize: 12, fill: '#475569' }}
                 />
                 <Tooltip
                   contentStyle={{
@@ -232,10 +231,11 @@ const DashboardPage: React.FC = () => {
                   }}
                   formatter={((value: number | string) => [value, 'Mediciones']) as any}
                 />
-                <Bar dataKey="count" radius={[4, 4, 0, 0]}>
-                  {categoryBarData.map((entry, index) => (
-                    <Cell key={`bar-${index}`} fill={entry.fill} />
-                  ))}
+                <Bar dataKey="count" radius={[0, 8, 8, 0]}>
+                    <LabelList dataKey="count" position="right" />
+                    {categoryBarData.map((entry, index) => (
+                        <Cell key={index} fill={entry.fill} />
+                    ))}
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
@@ -257,15 +257,12 @@ const DashboardPage: React.FC = () => {
                   data={categoryPieData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={60}
-                  outerRadius={100}
+                  innerRadius={45}
+                  outerRadius={80}
                   paddingAngle={2}
                   dataKey="value"
                   nameKey="name"
-                  label={({ name, percent }: { name?: string; percent?: number }) =>
-                    `${name ?? ''} (${((percent ?? 0) * 100).toFixed(0)}%)`
-                  }
-                  labelLine={{ stroke: '#94a3b8', strokeWidth: 1 }}
+                  label={false}
                 >
                   {categoryPieData.map((entry, index) => (
                     <Cell
@@ -276,6 +273,17 @@ const DashboardPage: React.FC = () => {
                     />
                   ))}
                 </Pie>
+
+                <Legend
+                  verticalAlign="bottom"
+                  align="center"
+                  iconType="circle"
+                  wrapperStyle={{
+                    fontSize: 13,
+                    paddingTop: 10,
+                  }}
+                />
+
                 <Tooltip
                   contentStyle={{
                     backgroundColor: '#fff',
@@ -311,17 +319,17 @@ const DashboardPage: React.FC = () => {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-slate-100 bg-slate-50 text-left">
-                    <th className="px-4 py-3 font-medium text-slate-600">
+                  <tr className="border-b border-slate-100 bg-clinical-50 text-left">
+                    <th className="px-4 py-3 font-medium text-clinical-700">
                       Paciente
                     </th>
-                    <th className="px-4 py-3 font-medium text-slate-600">
+                    <th className="px-4 py-3 font-medium text-clinical-700">
                       PA
                     </th>
-                    <th className="px-4 py-3 font-medium text-slate-600">
+                    <th className="px-4 py-3 font-medium text-clinical-700">
                       Categoria
                     </th>
-                    <th className="px-4 py-3 font-medium text-slate-600">
+                    <th className="px-4 py-3 font-medium text-clinical-700">
                       Fecha
                     </th>
                   </tr>
@@ -335,7 +343,7 @@ const DashboardPage: React.FC = () => {
                     return (
                       <tr
                         key={reading.id}
-                        className="border-b border-slate-100 transition-colors hover:bg-slate-50"
+                        className="border-b border-slate-100 transition-colors hover:bg-clinical-50"
                       >
                         <td className="px-4 py-3 text-slate-700">
                           {getPatientName(reading.patient_id)}
@@ -380,7 +388,7 @@ const DashboardPage: React.FC = () => {
                   <ClinicalAlert
                     key={reading.id}
                     level="critical"
-                    title={`${patientName} — ${bpFormatted}`}
+                    title={patientName}
                   >
                     {formatDateTime(reading.created_at)}
                   </ClinicalAlert>
@@ -396,37 +404,6 @@ const DashboardPage: React.FC = () => {
           )}
         </SectionCard>
       </div>
-
-      {/* Audit Trail */}
-      <SectionCard
-        title="Trazabilidad de Acciones"
-        subtitle="Registro de actividad reciente del sistema"
-        icon={<ClipboardList className="h-4 w-4" />}
-      >
-        {auditLogs.length > 0 ? (
-          <div className="space-y-2">
-            {auditLogs.map((log) => (
-              <div key={log.id} className="flex items-start gap-3 py-2 border-b border-slate-100 last:border-0">
-                <div className="w-2 h-2 rounded-full bg-clinical-500 mt-1.5 flex-shrink-0" />
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm text-slate-700">
-                    <span className="font-medium">{AUDIT_ACTION_LABELS[log.action] ?? log.action}</span>
-                    {log.entity_type && <span className="text-slate-500"> — {log.entity_type}</span>}
-                    {log.details?.description ? <span className="text-slate-500">: {String(log.details.description)}</span> : null}
-                  </p>
-                  <p className="text-xs text-slate-400 mt-0.5">{formatDateTime(log.created_at)}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <EmptyState
-            icon={<ClipboardList className="h-6 w-6" />}
-            title="Sin actividad registrada"
-            description="Las acciones del sistema apareceran aqui a medida que se utilice la plataforma"
-          />
-        )}
-      </SectionCard>
     </div>
   );
 };

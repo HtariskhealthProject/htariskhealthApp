@@ -425,7 +425,7 @@ function PatientDetailPage() {
           icon={<Activity className="h-4 w-4" />}
           actions={
             <Link
-              to={`/patients/${id}/history`}
+              to="/history"
               className="text-sm font-medium text-clinical-600 hover:text-clinical-700 transition-colors"
             >
               Ver Historial
@@ -441,7 +441,7 @@ function PatientDetailPage() {
           description="No hay lecturas de presion arterial registradas para este paciente."
           action={
             <Link
-              to={`/patients/${id}/new-reading`}
+              to="/readings/new"
               className="btn-primary"
             >
               Registrar Primera Lectura
@@ -453,14 +453,14 @@ function PatientDetailPage() {
       {/* Quick Actions */}
       <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
         <Link
-          to={`/patients/${id}/new-reading`}
+          to="/readings/new"
           className="btn-primary"
         >
           <Activity className="h-4 w-4" />
           Nueva Medicion
         </Link>
         <Link
-          to={`/patients/${id}/history`}
+          to="/history"
           className="btn-secondary"
         >
           <FileText className="h-4 w-4" />

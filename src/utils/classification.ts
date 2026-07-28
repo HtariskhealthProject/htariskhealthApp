@@ -74,6 +74,57 @@ const CATEGORY_CONFIG: Record<BPCategory, CategoryConfig> = {
   },
 };
 
+interface HeartRateConfig {
+  label: string;
+  color: string;
+  bgColor: string;
+  borderColor: string;
+  message: string;
+}
+
+export type HeartRateCategory =
+  | 'bradycardia'
+  | 'normal'
+  | 'tachycardia';
+
+export function classifyHeartRate(heartRate: number): HeartRateCategory {
+  if (heartRate < 60) {
+    return 'bradycardia';
+  }
+
+  if (heartRate > 100) {
+    return 'tachycardia';
+  }
+
+  return 'normal';
+}
+
+export const HEART_RATE_CONFIG: Record<HeartRateCategory, HeartRateConfig> = {
+  bradycardia: {
+  label: 'Bradicardia',
+  color: '#2563eb',
+  bgColor: '#eff6ff',
+  borderColor: '#bfdbfe',
+  message: 'Frecuencia cardíaca menor de 60 lpm.',
+},
+
+  normal: {
+  label: 'Normocardia',
+  color: '#16a34a',
+  bgColor: '#f0fdf4',
+  borderColor: '#bbf7d0',
+  message: 'Frecuencia cardíaca dentro del rango normal (60-100 lpm).',
+},
+
+tachycardia: {
+  label: 'Taquicardia',
+  color: '#dc2626',
+  bgColor: '#fef2f2',
+  borderColor: '#fecaca',
+  message: 'Frecuencia cardíaca mayor de 100 lpm.',
+},
+};
+
 export function classifyBloodPressure(
   systolic: number,
   diastolic: number,
@@ -119,3 +170,5 @@ export function calculateBMI(weightKg: number, heightM: number): number {
 }
 
 export const DISCLAIMER = 'Este sistema es una herramienta de apoyo clinico y NO reemplaza el criterio medico profesional. Las clasificaciones se basan en las guias AHA/ACC 2025. Siempre confirme los resultados con evaluacion clinica completa.';
+
+

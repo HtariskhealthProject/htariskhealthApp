@@ -10,7 +10,12 @@ import type {
   ReadingContext,
   ReadingMethod,
 } from '../../types';
-import { classifyBloodPressure, DISCLAIMER } from '../../utils/classification';
+import {
+  classifyBloodPressure,
+  classifyHeartRate,
+  HEART_RATE_CONFIG,
+  DISCLAIMER,
+} from '../../utils/classification';
 import { ALARM_SYMPTOMS } from '../../types';
 import { CONTEXT_LABELS, METHOD_LABELS } from '../../utils/formatters';
 import PageHeader from '../../components/ui/PageHeader';
@@ -62,6 +67,15 @@ function NewReadingPage() {
     formData.systolic > 0 && formData.diastolic > 0
       ? classifyBloodPressure(formData.systolic, formData.diastolic, formData.alarm_symptoms)
       : null;
+
+  const heartRateClassification =
+  formData.heart_rate > 0
+    ? classifyHeartRate(formData.heart_rate)
+    : null;
+
+const heartRateInfo = heartRateClassification
+  ? HEART_RATE_CONFIG[heartRateClassification]
+  : null;
 
   const isHypertensiveEmergency =
     (formData.systolic >= 180 || formData.diastolic >= 120) &&
@@ -260,6 +274,25 @@ function NewReadingPage() {
               <p className="mt-1 text-sm text-slate-500">{classification.recommendation}</p>
             </div>
           )}
+          {heartRateInfo && (
+          <div
+            className={`mt-4 rounded-lg border p-4 ${heartRateInfo.bgColor} ${heartRateInfo.borderColor}`}
+          >
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-medium">
+                Frecuencia cardíaca:
+              </span>
+
+              <span className={`font-semibold ${heartRateInfo.color}`}>
+                {heartRateInfo.label}
+              </span>
+            </div>
+
+            <p className="mt-2 text-sm">
+              {heartRateInfo.message}
+            </p>
+          </div>
+        )}
         </SectionCard>
 
         {/* Block 3: Sintomas de Alarma */}

@@ -222,7 +222,7 @@ export default function ReportsPage() {
           subtitle="Evolucion de presion arterial sistolica y diastolica"
           icon={<TrendingUp className="w-4 h-4" />}
         >
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-2 text-sm mb-3 -mt-1">
+          <div className="flex flex-wrap items-center justify-end gap-4 text-sm mb-4">
             <div className="flex items-center gap-2">
               <label className="text-slate-500 text-xs">Desde:</label>
               <input
@@ -244,7 +244,8 @@ export default function ReportsPage() {
           </div>
           {filteredMonthlyData.length > 0 ? (
             <div className="h-[280px]">
-              <ResponsiveContainer width="100%" height="100%">
+              <div className="h-[260px]">
+                <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={filteredMonthlyData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                   <XAxis
@@ -295,6 +296,7 @@ export default function ReportsPage() {
                   />
                 </BarChart>
               </ResponsiveContainer>
+              </div>
             </div>
           ) : (
             <EmptyState
@@ -312,13 +314,14 @@ export default function ReportsPage() {
           icon={<Activity className="w-4 h-4" />}
         >
           {pieData.length > 0 ? (
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
+            <div className="space-y-5">
+              <div className="h-[260px]">
+    <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={pieData}
                     cx="50%"
-                    cy="50%"
+                    cy="52%"
                     innerRadius={75}
                     outerRadius={115}
                     paddingAngle={4}
@@ -344,6 +347,7 @@ export default function ReportsPage() {
                   />
                 </PieChart>
               </ResponsiveContainer>
+              </div>
               <div className="mt-4 grid grid-cols-2 gap-2">
                   {pieData.map((item) => (
                     <div
@@ -388,7 +392,8 @@ export default function ReportsPage() {
         >
           {heartRateData.length > 0 ? (
             <div className="h-[280px]">
-              <ResponsiveContainer width="100%" height="100%">
+              <div className="h-[260px]">
+    <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={heartRateData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                   <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#475569' }} />
@@ -416,6 +421,7 @@ export default function ReportsPage() {
                 </LineChart>
               </ResponsiveContainer>
             </div>
+            </div>
           ) : (
             <EmptyState
               icon={<HeartPulse className="w-6 h-6" />}
@@ -432,7 +438,8 @@ export default function ReportsPage() {
         >
           {bmiData.length > 0 ? (
             <div className="h-[280px]">
-              <ResponsiveContainer width="100%" height="100%">
+              <div className="h-[260px]">
+    <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={bmiData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                   <XAxis
@@ -476,6 +483,7 @@ export default function ReportsPage() {
                   />
                 </LineChart>
               </ResponsiveContainer>
+            </div>
             </div>
           ) : (
             <EmptyState

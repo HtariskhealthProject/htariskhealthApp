@@ -240,47 +240,44 @@ const getPatientName = (patientId: string) => {
 
         {/* Pie Chart - Category Distribution */}
         <SectionCard title="Distribucion por Categoria" subtitle="Proporcion por categoria clinica">
-          {pieChartData.length > 0 ? (
+        {pieChartData.length > 0 ? (
+          <>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
-                <Pie
-                  data={pieChartData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={72}
-                  outerRadius={118}
-                  paddingAngle={4}
-                  dataKey="value"
-                  nameKey="name"
-                >
-                  {pieChartData.map((entry, index) => (
-                    <Cell
-                      key={`pie-${index}`}
-                      fill={CATEGORY_COLORS[entry.category]}
-                      stroke="#ffffff"
-                      strokeWidth={4}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: '#fff',
-                    border: '1px solid #e2e8f0',
-                    borderRadius: '8px',
-                    fontSize: '13px',
-                  }}
-                  formatter={((value: number | string) => [value, 'Lecturas']) as any}
-                />
+                ...
               </PieChart>
             </ResponsiveContainer>
-          ) : (
-            <EmptyState
-              icon={<Filter className="w-6 h-6" />}
-              title="Sin datos"
-              description="No hay datos disponibles para los filtros seleccionados"
-            />
-          )}
-        </SectionCard>
+
+            <div className="mt-4 grid grid-cols-2 gap-2 text-sm">
+              {pieChartData.map((item) => (
+                <div
+                  key={item.category}
+                  className="flex items-center gap-2"
+                >
+                  <span
+                    className="h-3 w-3 rounded-full"
+                    style={{ backgroundColor: CATEGORY_COLORS[item.category] }}
+                  />
+
+                  <span className="text-slate-600 truncate">
+                    {item.name}
+                  </span>
+
+                  <span className="ml-auto font-semibold text-slate-800">
+                    {item.value}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : (
+          <EmptyState
+            icon={<Filter className="w-6 h-6" />}
+            title="Sin datos"
+            description="No hay datos disponibles para los filtros seleccionados"
+          />
+        )}
+      </SectionCard>
       </div>
 
       {/* Readings: Table + Timeline */}

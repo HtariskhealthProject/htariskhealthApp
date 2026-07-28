@@ -168,4 +168,98 @@ export const ReportService = {
         avgDiastolic: Math.round(data.diastolic.reduce((a, b) => a + b, 0) / data.diastolic.length),
       }));
   },
+
+  async getHeartRateByMonth(): Promise<{ month: string; avgHeartRate: number }[]> {
+    if (USE_SUPABASE) {
+      const { data, error } = await supabase
+        .from('blood_pressure_readings')
+        .select('heart_rate, created_at')
+        .order('created_at', { ascending: true });
+      if (error) throw error;
+
+      const allReadings = data ?? [];
+      const monthMap: Record<string, number[]> = {};
+
+      allReadings.forEach((r: { heart_rate: number | null; created_at: string }) => {
+        if (r.heart_rate == null || r.heart_rate <= 0) return;
+        const date = new Date(r.created_at);
+        const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+        if (!monthMap[key]) monthMap[key] = [];
+        monthMap[key].push(r.heart_rate);
+      });
+
+      return Object.entries(monthMap)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([month, heartRates]) => ({
+          month,
+          avgHeartRate: Math.round(heartRates.reduce((a, b) => a + b, 0) / heartRates.length),
+        }));
+    }
+
+    // Mock fallback
+    await new Promise((r) => setTimeout(r, 150));
+    const monthMap: Record<string, number[]> = {};
+
+    mockReadings.forEach((r) => {
+      if (r.heart_rate <= 0) return;
+      const date = new Date(r.created_at);
+      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+      if (!monthMap[key]) monthMap[key] = [];
+      monthMap[key].push(r.heart_rate);
+    });
+
+    return Object.entries(monthMap)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([month, heartRates]) => ({
+        month,
+        avgHeartRate: Math.round(heartRates.reduce((a, b) => a + b, 0) / heartRates.length),
+      }));
+  },
+
+  async getBMIByMonth(): Promise<{ month: string; avgBMI: number }[]> {
+    if (USE_SUPABASE) {
+      const { data, error } = await supabase
+        .from('patients')
+        .select('bmi, created_at')
+        .order('created_at', { ascending: true });
+      if (error) throw error;
+
+      const allPatients = data ?? [];
+      const monthMap: Record<string, number[]> = {};
+
+      allPatients.forEach((p: { bmi: number | null; created_at: string }) => {
+        if (p.bmi == null || p.bmi <= 0) return;
+        const date = new Date(p.created_at);
+        const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+        if (!monthMap[key]) monthMap[key] = [];
+        monthMap[key].push(p.bmi);
+      });
+
+      return Object.entries(monthMap)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([month, bmis]) => ({
+          month,
+          avgBMI: Math.round((bmis.reduce((a, b) => a + b, 0) / bmis.length) * 10) / 10,
+        }));
+    }
+
+    // Mock fallback
+    await new Promise((r) => setTimeout(r, 150));
+    const monthMap: Record<string, number[]> = {};
+
+    mockPatients.forEach((p) => {
+      if (p.bmi <= 0) return;
+      const date = new Date(p.created_at);
+      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+      if (!monthMap[key]) monthMap[key] = [];
+      monthMap[key].push(p.bmi);
+    });
+
+    return Object.entries(monthMap)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([month, bmis]) => ({
+        month,
+        avgBMI: Math.round((bmis.reduce((a, b) => a + b, 0) / bmis.length) * 10) / 10,
+      }));
+  },
 };

@@ -20,6 +20,9 @@ import {
   PieChart,
   Pie,
   Cell,
+  LineChart,
+  Line,
+  Legend,
 } from 'recharts';
 import {
   FileBarChart,
@@ -52,6 +55,16 @@ interface CategorySummary {
   percentage: number;
 }
 
+interface HeartRateData {
+  month: string;
+  avgHeartRate: number;
+}
+
+interface BMIData {
+  month: string;
+  avgBMI: number;
+}
+
 export default function ReportsPage() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([]);
@@ -59,19 +72,25 @@ export default function ReportsPage() {
   const [loading, setLoading] = useState(true);
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
+  const [heartRateData, setHeartRateData] = useState<HeartRateData[]>([]);
+  const [bmiData, setBmiData] = useState<BMIData[]>([]);
 
   useEffect(() => {
     async function loadData() {
       setLoading(true);
       try {
-        const [dashboardStats, monthData, catSummary] = await Promise.all([
+        const [dashboardStats, monthData, catSummary, heartRate, bmi] = await Promise.all([
           ReportService.getDashboardStats(),
           ReportService.getReadingsByMonth(),
           ReportService.getCategorySummary(),
+          ReportService.getHeartRateByMonth(),
+          ReportService.getBMIByMonth(),
         ]);
         setStats(dashboardStats);
         setMonthlyData(monthData);
         setCategorySummary(catSummary);
+        setHeartRateData(heartRate);
+        setBmiData(bmi);
       } catch (error) {
         console.error('Error loading report data:', error);
       } finally {
@@ -311,6 +330,93 @@ export default function ReportsPage() {
             />
           )}
         </SectionCard>
+      </div>
+
+      {/* 3b. Heart Rate & BMI Trend Charts Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <TrendChartCard
+          title="Evolucion de Frecuencia Cardiaca"
+          subtitle="Promedio mensual de frecuencia cardiaca"
+          icon={<HeartPulse className="w-4 h-4" />}
+        >
+          {heartRateData.length > 0 ? (
+            <div className="h-[280px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={heartRateData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                  <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#475569' }} />
+                  <YAxis tick={{ fontSize: 11, fill: '#475569' }} />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#fff',
+                      border: '1px solid #e2e8f0',
+                      borderRadius: '8px',
+                      fontSize: 13,
+                    }}
+                  />
+                  <Legend />
+                  <Line
+                    type="monotone"
+                    dataKey="avgHeartRate"
+                    stroke="#16a34a"
+                    strokeWidth={3}
+                    dot={{ r: 4 }}
+                    activeDot={{ r: 6 }}
+                    name="Frecuencia Cardiaca"
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <EmptyState
+              icon={<HeartPulse className="w-6 h-6" />}
+              title="Sin datos de frecuencia cardiaca"
+              description="No se encontraron mediciones para mostrar."
+            />
+          )}
+        </TrendChartCard>
+
+        <TrendChartCard
+          title="Evolucion del IMC"
+          subtitle="Promedio mensual del indice de masa corporal"
+          icon={<Activity className="w-4 h-4" />}
+        >
+          {bmiData.length > 0 ? (
+            <div className="h-[280px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={bmiData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                  <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#475569' }} />
+                  <YAxis tick={{ fontSize: 11, fill: '#475569' }} />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#fff',
+                      border: '1px solid #e2e8f0',
+                      borderRadius: '8px',
+                      fontSize: 13,
+                    }}
+                  />
+                  <Legend />
+                  <Line
+                    type="monotone"
+                    dataKey="avgBMI"
+                    stroke="#2563eb"
+                    strokeWidth={3}
+                    dot={{ r: 4 }}
+                    activeDot={{ r: 6 }}
+                    name="IMC"
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <EmptyState
+              icon={<Activity className="w-6 h-6" />}
+              title="Sin datos de IMC"
+              description="No se encontraron registros para mostrar."
+            />
+          )}
+        </TrendChartCard>
       </div>
 
       {/* 4. Category Summary Cards Row */}

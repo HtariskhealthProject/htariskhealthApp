@@ -23,6 +23,7 @@ import {
   LineChart,
   Line,
   Legend,
+  ReferenceLine,
 } from 'recharts';
 import {
   FileBarChart,
@@ -246,15 +247,39 @@ export default function ReportsPage() {
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={filteredMonthlyData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                  <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#475569' }} />
+                  <XAxis
+                      dataKey="month"
+                      tick={{ fontSize: 11, fill: '#475569' }}
+                      tickFormatter={(value) =>
+                          new Date(`${value}-01`).toLocaleDateString('es-CO', {
+                              month: 'short',
+                          })
+                      }
+                  />
                   <YAxis tick={{ fontSize: 11, fill: '#475569' }} />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: '#fff',
+                      backgroundColor: '#ffffff',
                       border: '1px solid #e2e8f0',
-                      borderRadius: '8px',
-                      fontSize: 13,
+                      borderRadius: '12px',
+                      boxShadow: '0 6px 18px rgba(15,23,42,0.12)',
+                      padding: '10px 14px',
                     }}
+                    labelFormatter={(label) =>
+                      new Date(`${label}-01`).toLocaleDateString('es-CO', {
+                        month: 'long',
+                        year: 'numeric',
+                      })
+                    }
+                    formatter={
+                      ((value: number | string, name: string) => {
+                        if (name === 'avgSystolic') {
+                          return [`${value} mmHg`, 'Sistólica'];
+                        }
+
+                        return [`${value} mmHg`, 'Diastólica'];
+                      }) as any
+                    }
                   />
                   <Bar
                     dataKey="avgSystolic"
@@ -294,15 +319,13 @@ export default function ReportsPage() {
                     data={pieData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={60}
-                    outerRadius={100}
-                    paddingAngle={2}
+                    innerRadius={75}
+                    outerRadius={115}
+                    paddingAngle={4}
                     dataKey="value"
                     nameKey="name"
-                    label={({ name, percent }: { name?: string; percent?: number }) =>
-                      `${name ?? ''}: ${((percent ?? 0) * 100).toFixed(0)}%`
-                    }
-                    labelLine={true}
+                    stroke="#ffffff"
+                    strokeWidth={3}
                   >
                     {pieData.map((entry, index) => (
                       <Cell
@@ -321,6 +344,30 @@ export default function ReportsPage() {
                   />
                 </PieChart>
               </ResponsiveContainer>
+              <div className="mt-4 grid grid-cols-2 gap-2">
+                  {pieData.map((item) => (
+                    <div
+                      key={item.category}
+                      className="flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span
+                          className="w-3 h-3 rounded-full"
+                          style={{
+                            backgroundColor: CATEGORY_COLORS[item.category as BPCategory],
+                          }}
+                        />
+                        <span className="text-sm text-slate-700">
+                          {item.name}
+                        </span>
+                      </div>
+
+                      <span className="text-sm font-semibold text-slate-800">
+                        {item.value}
+                      </span>
+                    </div>
+                  ))}
+                </div>
             </div>
           ) : (
             <EmptyState
@@ -345,7 +392,10 @@ export default function ReportsPage() {
                 <LineChart data={heartRateData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                   <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#475569' }} />
-                  <YAxis tick={{ fontSize: 11, fill: '#475569' }} />
+                  <YAxis
+                    tick={{ fontSize: 11, fill: '#475569' }}
+                    domain={['dataMin - 5', 'dataMax + 5']}
+                  />
                   <Tooltip
                     contentStyle={{
                       backgroundColor: '#fff',
@@ -385,15 +435,34 @@ export default function ReportsPage() {
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={bmiData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                  <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#475569' }} />
-                  <YAxis tick={{ fontSize: 11, fill: '#475569' }} />
+                  <XAxis
+                    dataKey="month"
+                    tick={{ fontSize: 11, fill: '#475569' }}
+                    tickFormatter={(value) =>
+                      new Date(`${value}-01`).toLocaleDateString('es-CO', {
+                        month: 'short',
+                      })
+                    }
+                  />
+                  <YAxis
+                    tick={{ fontSize: 11, fill: '#475569' }}
+                    domain={['dataMin - 1', 'dataMax + 1']}
+                  />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: '#fff',
+                      backgroundColor: '#ffffff',
                       border: '1px solid #e2e8f0',
-                      borderRadius: '8px',
-                      fontSize: 13,
+                      borderRadius: '12px',
+                      boxShadow: '0 6px 18px rgba(15,23,42,0.12)',
+                      padding: '10px 14px',
                     }}
+                    labelFormatter={(label) =>
+                      new Date(`${label}-01`).toLocaleDateString('es-CO', {
+                        month: 'long',
+                        year: 'numeric',
+                      })
+                    }
+                    formatter={((value: number | string) => [`${value}`, 'IMC promedio']) as any}
                   />
                   
                   <Line

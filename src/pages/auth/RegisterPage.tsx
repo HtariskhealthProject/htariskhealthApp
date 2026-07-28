@@ -8,7 +8,7 @@ export default function RegisterPage() {
     email: '',
     password: '',
     full_name: '',
-    role: 'medico' as 'medico' | 'enfermera',
+    role: 'medico' as 'medico' | 'enfermero',
     license_number: '',
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -50,7 +50,7 @@ export default function RegisterPage() {
           <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/15 border border-white/20">
             <Activity className="w-3.5 h-3.5 text-blue-100/90" />
             <span className="text-blue-100 text-xs font-medium">
-              Acceso exclusivo para personal medico
+              Acceso exclusivo para personal de la salud
             </span>
           </div>
         </div>
@@ -115,11 +115,11 @@ export default function RegisterPage() {
               <label className="label-clinical">Rol</label>
               <select
                 value={form.role}
-                onChange={(e) => setForm({ ...form, role: e.target.value as 'medico' | 'enfermera' })}
+                onChange={(e) => setForm({ ...form, role: e.target.value as 'medico' | 'enfermero' })}
                 className="select-clinical"
               >
                 <option value="medico">Medico</option>
-                <option value="enfermera">Enfermera</option>
+                <option value="enfermero">enfermero</option>
               </select>
             </div>
 

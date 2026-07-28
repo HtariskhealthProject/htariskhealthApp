@@ -13,7 +13,7 @@ interface AuthContextType {
     email: string;
     password: string;
     full_name: string;
-    role: 'medico' | 'enfermera';
+    role: 'medico' | 'enfermero';
     license_number: string;
   }) => Promise<void>;
   logout: () => Promise<void>;

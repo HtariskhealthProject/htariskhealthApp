@@ -42,7 +42,7 @@ const layers = [
       {
         icon: <Shield className="w-5 h-5" />,
         title: 'Supabase Auth',
-        description: 'Autenticacion de usuarios con email/password. Gestiona sesiones JWT, roles (medico/enfermera) y proteccion de rutas.',
+        description: 'Autenticacion de usuarios con email/password. Gestiona sesiones JWT, roles (medico/enfermero) y proteccion de rutas.',
         tech: 'JWT / Row Level Security / Roles',
       },
       {
@@ -184,7 +184,7 @@ export default function CloudArchitecturePage() {
         <div className="space-y-4">
           <ServiceRow
             name="Supabase Auth"
-            description="Gestiona registro, login, sesiones JWT y roles de usuario (medico/enfermera). Protege rutas y datos mediante tokens."
+            description="Gestiona registro, login, sesiones JWT y roles de usuario (medico/enfermero). Protege rutas y datos mediante tokens."
             endpoint="auth.users"
             status="Activo"
           />

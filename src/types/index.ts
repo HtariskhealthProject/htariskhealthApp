@@ -10,7 +10,7 @@ export interface UserProfile {
   id: string;
   email: string;
   full_name: string;
-  role: 'medico' | 'enfermera';
+  role: 'medico' | 'enfermero';
   license_number: string;
   created_at: string;
 }

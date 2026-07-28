@@ -109,6 +109,24 @@ function PatientFormPage() {
     e.preventDefault();
     if (!user) return;
 
+    if (!formData.first_name.trim() || !formData.last_name.trim()) {
+    setError('Debe ingresar el nombre completo del paciente.');
+    return;
+  }
+
+  const nameRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
+
+  if (!nameRegex.test(formData.first_name.trim())) {
+    setError('Los nombres solo pueden contener letras.');
+    return;
+  }
+
+  if (!nameRegex.test(formData.last_name.trim())) {
+    setError('Los apellidos solo pueden contener letras.');
+    return;
+  }
+
+
     setSaving(true);
     setError(null);
 

@@ -5,7 +5,7 @@ import LoadingSpinner from '../ui/LoadingSpinner';
 
 interface Props {
   children: ReactNode;
-  requiredRole?: 'medico' | 'enfermera';
+  requiredRole?: 'medico' | 'enfermero';
 }
 
 export default function ProtectedRoute({ children, requiredRole }: Props) {

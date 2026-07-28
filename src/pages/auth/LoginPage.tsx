@@ -29,7 +29,7 @@ export default function LoginPage() {
   const features = [
     { icon: Shield, label: 'Clasificacion AHA 2025' },
     { icon: HeartPulse, label: 'Seguimiento Continuo' },
-    { icon: Bell, label: 'Alertas Clinicas' },
+    { icon: Bell, label: 'Alertas' },
   ];
 
   return (
@@ -62,7 +62,7 @@ export default function LoginPage() {
           <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/15 border border-white/20">
             <Shield className="w-3.5 h-3.5 text-white" />
             <span className="text-white text-xs font-medium">
-              Acceso exclusivo para personal medico
+              Acceso exclusivo para personal de la salud
             </span>
           </div>
         </div>

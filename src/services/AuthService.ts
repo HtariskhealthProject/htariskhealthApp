@@ -27,7 +27,7 @@ function mapProfileToUser(profile: { id: string; full_name: string; role: string
     id: profile.id,
     email,
     full_name: profile.full_name,
-    role: profile.role === 'healthcare_professional' ? 'medico' : (profile.role as 'medico' | 'enfermera'),
+    role: profile.role === 'healthcare_professional' ? 'medico' : (profile.role as 'medico' | 'enfermero'),
     license_number: license_number ?? '',
     created_at: profile.created_at,
   };
@@ -80,7 +80,7 @@ export const AuthService = {
     email: string;
     password: string;
     full_name: string;
-    role: 'medico' | 'enfermera';
+    role: 'medico' | 'enfermero';
     license_number: string;
   }): Promise<UserProfile> {
     if (USE_SUPABASE) {
@@ -98,7 +98,7 @@ export const AuthService = {
       if (authError) throw new Error(authError.message);
       if (!authData.user) throw new Error('Error al registrar usuario');
 
-      const dbRole = data.role === 'medico' || data.role === 'enfermera'
+      const dbRole = data.role === 'medico' || data.role === 'enfermero'
         ? 'healthcare_professional'
         : data.role;
 

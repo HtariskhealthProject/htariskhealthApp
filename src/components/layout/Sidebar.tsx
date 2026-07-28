@@ -110,7 +110,7 @@ export default function Sidebar({ open, onClose }: Props) {
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-medium text-slate-800 truncate">{user.full_name}</p>
-                <p className="text-xs text-slate-400 truncate">{user.role === 'medico' ? 'Medico' : 'Enfermera'}</p>
+                <p className="text-xs text-slate-400 truncate">{user.role === 'medico' ? 'Medico' : 'enfermero'}</p>
               </div>
             </div>
             <button

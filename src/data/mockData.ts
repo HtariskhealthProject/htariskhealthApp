@@ -12,9 +12,9 @@ export const mockUsers: UserProfile[] = [
   },
   {
     id: '2',
-    email: 'enfermera.garcia@hta-risk.com',
+    email: 'enfermero.garcia@hta-risk.com',
     full_name: 'Enf. Maria Garcia',
-    role: 'enfermera',
+    role: 'enfermero',
     license_number: 'ENF-2024-042',
     created_at: '2024-02-01T08:00:00Z',
   },

@@ -247,22 +247,18 @@ const getPatientName = (patientId: string) => {
                   data={pieChartData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={60}
-                  outerRadius={100}
-                  paddingAngle={2}
+                  innerRadius={72}
+                  outerRadius={118}
+                  paddingAngle={4}
                   dataKey="value"
                   nameKey="name"
-                  label={({ name, percent }: { name?: string; percent?: number }) =>
-                    `${name ?? ''} (${((percent ?? 0) * 100).toFixed(0)}%)`
-                  }
-                  labelLine={{ stroke: '#94a3b8', strokeWidth: 1 }}
                 >
                   {pieChartData.map((entry, index) => (
                     <Cell
                       key={`pie-${index}`}
                       fill={CATEGORY_COLORS[entry.category]}
-                      stroke="#fff"
-                      strokeWidth={2}
+                      stroke="#ffffff"
+                      strokeWidth={4}
                     />
                   ))}
                 </Pie>

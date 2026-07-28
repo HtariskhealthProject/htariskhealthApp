@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { PatientService } from '../../services/PatientService';
 import { ReadingHistoryService } from '../../services/ReadingHistoryService';
-import type { Patient, BloodPressureReading } from '../../types';
+import type { Patient, BloodPressureReading, PatientTrendPoint } from '../../types';
 import PageHeader from '../../components/ui/PageHeader';
 import SectionCard from '../../components/ui/SectionCard';
 import StatusBadge from '../../components/ui/StatusBadge';
@@ -10,6 +10,7 @@ import ClinicalAlert from '../../components/ui/ClinicalAlert';
 import RecordTimeline from '../../components/ui/RecordTimeline';
 import TrendChartCard from '../../components/ui/TrendChartCard';
 import EmptyState from '../../components/ui/EmptyState';
+import StatCard from '../../components/ui/StatCard';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import {
   formatDate,
@@ -29,6 +30,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   ReferenceLine,
+  Legend,
 } from 'recharts';
 import {
   CreditCard as Edit,
@@ -48,6 +50,7 @@ function PatientDetailPage() {
   const [readings, setReadings] = useState<BloodPressureReading[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [trendData, setTrendData] = useState<PatientTrendPoint[]>([]);
 
   useEffect(() => {
     if (!id) return;
@@ -55,9 +58,10 @@ function PatientDetailPage() {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const [patientData, readingsData] = await Promise.all([
+        const [patientData, readingsData, trend] = await Promise.all([
           PatientService.getById(id),
           ReadingHistoryService.getByPatient(id),
+          ReadingHistoryService.getPatientTrend(id),
         ]);
         if (!patientData) {
           setError('Paciente no encontrado');
@@ -65,6 +69,7 @@ function PatientDetailPage() {
         }
         setPatient(patientData);
         setReadings(readingsData);
+        setTrendData(trend);
       } catch {
         setError('Error al cargar los datos del paciente');
       } finally {
@@ -354,6 +359,149 @@ function PatientDetailPage() {
         </SectionCard>
       </div>
 
+      {/* Clinical Evolution Section */}
+      {trendData.length > 0 ? (
+        <>
+          <SectionCard
+            title="Evolución Clínica"
+            subtitle="Seguimiento histórico de los indicadores del paciente"
+            icon={<Activity className="h-4 w-4" />}
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <StatCard
+                title="Última Presión"
+                value={`${trendData[trendData.length - 1].systolic} / ${trendData[trendData.length - 1].diastolic} mmHg`}
+                icon={<Activity className="h-5 w-5" />}
+                color="clinical"
+              />
+              <StatCard
+                title="Última Frecuencia Cardíaca"
+                value={`${trendData[trendData.length - 1].heartRate} lpm`}
+                icon={<Heart className="h-5 w-5" />}
+                color="emerald"
+              />
+              <StatCard
+                title="Último IMC"
+                value={`${trendData[trendData.length - 1].bmi} kg/m²`}
+                icon={<Heart className="h-5 w-5" />}
+                color="amber"
+              />
+            </div>
+          </SectionCard>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <TrendChartCard title="Presión Arterial" icon={<Activity className="h-4 w-4" />}>
+              <div className="h-[300px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={trendData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                    <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#475569' }} />
+                    <YAxis tick={{ fontSize: 11, fill: '#475569' }} />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: '#fff',
+                        border: '1px solid #e2e8f0',
+                        borderRadius: '8px',
+                        fontSize: '13px',
+                      }}
+                    />
+                    <Legend />
+                    <Line
+                      type="monotone"
+                      dataKey="systolic"
+                      stroke="#1e40af"
+                      strokeWidth={2}
+                      dot={{ r: 4 }}
+                      name="Sistólica"
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="diastolic"
+                      stroke="#94a3b8"
+                      strokeWidth={2}
+                      dot={{ r: 4 }}
+                      name="Diastólica"
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </TrendChartCard>
+
+            <TrendChartCard title="Frecuencia Cardíaca" icon={<Heart className="h-4 w-4" />}>
+              <div className="h-[300px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={trendData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                    <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#475569' }} />
+                    <YAxis tick={{ fontSize: 11, fill: '#475569' }} />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: '#fff',
+                        border: '1px solid #e2e8f0',
+                        borderRadius: '8px',
+                        fontSize: '13px',
+                      }}
+                    />
+                    <Legend />
+                    <Line
+                      type="monotone"
+                      dataKey="heartRate"
+                      stroke="#16a34a"
+                      strokeWidth={3}
+                      dot={{ r: 4 }}
+                      activeDot={{ r: 6 }}
+                      name="Frecuencia Cardíaca"
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </TrendChartCard>
+
+            <TrendChartCard title="Índice de Masa Corporal" icon={<Heart className="h-4 w-4" />}>
+              <div className="h-[300px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={trendData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                    <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#475569' }} />
+                    <YAxis tick={{ fontSize: 11, fill: '#475569' }} />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: '#fff',
+                        border: '1px solid #e2e8f0',
+                        borderRadius: '8px',
+                        fontSize: '13px',
+                      }}
+                    />
+                    <Legend />
+                    <Line
+                      type="monotone"
+                      dataKey="bmi"
+                      stroke="#2563eb"
+                      strokeWidth={3}
+                      dot={{ r: 4 }}
+                      activeDot={{ r: 6 }}
+                      name="IMC"
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </TrendChartCard>
+          </div>
+        </>
+      ) : (
+        <SectionCard
+          title="Evolución Clínica"
+          subtitle="Seguimiento histórico de los indicadores del paciente"
+          icon={<Activity className="h-4 w-4" />}
+        >
+          <EmptyState
+            icon={<Activity className="h-6 w-6" />}
+            title="Sin datos suficientes"
+            description="Este paciente aún no tiene suficientes mediciones para generar la evolución clínica."
+          />
+        </SectionCard>
+      )}
+
       {/* BP Evolution Chart */}
       {chartData.length > 1 ? (
         <TrendChartCard
@@ -425,7 +573,7 @@ function PatientDetailPage() {
           icon={<Activity className="h-4 w-4" />}
           actions={
             <Link
-              to="/history"
+              to={`/patients/${id}/history`}
               className="text-sm font-medium text-clinical-600 hover:text-clinical-700 transition-colors"
             >
               Ver Historial
@@ -441,7 +589,7 @@ function PatientDetailPage() {
           description="No hay lecturas de presion arterial registradas para este paciente."
           action={
             <Link
-              to="/readings/new"
+              to={`/patients/${id}/new-reading`}
               className="btn-primary"
             >
               Registrar Primera Lectura
@@ -453,14 +601,14 @@ function PatientDetailPage() {
       {/* Quick Actions */}
       <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
         <Link
-          to="/readings/new"
+          to={`/patients/${id}/new-reading`}
           className="btn-primary"
         >
           <Activity className="h-4 w-4" />
           Nueva Medicion
         </Link>
         <Link
-          to="/history"
+          to={`/patients/${id}/history`}
           className="btn-secondary"
         >
           <FileText className="h-4 w-4" />

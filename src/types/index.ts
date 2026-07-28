@@ -10,7 +10,7 @@ export interface UserProfile {
   id: string;
   email: string;
   full_name: string;
-  role: 'medico' | 'enfermero';
+  role: 'medico' | 'enfermera';
   license_number: string;
   created_at: string;
 }
@@ -112,6 +112,14 @@ export interface AuditLog {
   entity_id: string | null;
   details: Record<string, unknown>;
   created_at: string;
+}
+
+export interface PatientTrendPoint {
+  date: string;
+  systolic: number;
+  diastolic: number;
+  heartRate: number;
+  bmi: number;
 }
 
 export interface DashboardStats {

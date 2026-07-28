@@ -1,7 +1,8 @@
-import type { BloodPressureReading, BloodPressureReadingFormData } from '../types';
+import type { BloodPressureReading, BloodPressureReadingFormData, PatientTrendPoint } from '../types';
 import { supabase } from '../lib/supabase';
-import { mockReadings } from '../data/mockData';
+import { mockReadings, mockPatients } from '../data/mockData';
 import { BloodPressureClassificationService } from './BloodPressureClassificationService';
+import { PatientService } from './PatientService';
 
 const USE_SUPABASE = Boolean(import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY);
 let readings = [...mockReadings];
@@ -141,6 +142,47 @@ export const ReadingHistoryService = {
       return count ?? 0;
     }
     return readings.length;
+  },
+
+  async getPatientTrend(patientId: string): Promise<PatientTrendPoint[]> {
+    if (USE_SUPABASE) {
+      const { data, error } = await supabase
+        .from('blood_pressure_readings')
+        .select('*')
+        .eq('patient_id', patientId)
+        .order('created_at', { ascending: true });
+      if (error) throw error;
+
+      const allReadings = (data ?? []).map(dbToReading);
+      if (allReadings.length === 0) return [];
+
+      const patient = await PatientService.getById(patientId);
+      const bmi = patient ? patient.bmi : 0;
+
+      return allReadings.map((r) => ({
+        date: r.created_at.slice(0, 10),
+        systolic: r.systolic,
+        diastolic: r.diastolic,
+        heartRate: r.heart_rate,
+        bmi,
+      }));
+    }
+    await new Promise((r) => setTimeout(r, 150));
+    const patientReadings = readings
+      .filter((r) => r.patient_id === patientId)
+      .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+    if (patientReadings.length === 0) return [];
+
+    const patient = mockPatients.find((p) => p.id === patientId);
+    const bmi = patient ? patient.bmi : 0;
+
+    return patientReadings.map((r) => ({
+      date: r.created_at.slice(0, 10),
+      systolic: r.systolic,
+      diastolic: r.diastolic,
+      heartRate: r.heart_rate,
+      bmi,
+    }));
   },
 
   async filter(filters: {

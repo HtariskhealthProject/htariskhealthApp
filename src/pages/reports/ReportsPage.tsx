@@ -354,7 +354,6 @@ export default function ReportsPage() {
                       fontSize: 13,
                     }}
                   />
-                  <Legend />
                   <Line
                     type="monotone"
                     dataKey="avgHeartRate"
@@ -396,7 +395,7 @@ export default function ReportsPage() {
                       fontSize: 13,
                     }}
                   />
-                  <Legend />
+                  
                   <Line
                     type="monotone"
                     dataKey="avgBMI"

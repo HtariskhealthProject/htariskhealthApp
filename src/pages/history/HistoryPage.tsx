@@ -239,37 +239,95 @@ const getPatientName = (patientId: string) => {
         </TrendChartCard>
 
         {/* Pie Chart - Category Distribution */}
-        <SectionCard title="Distribucion por Categoria" subtitle="Proporcion por categoria clinica">
+        <SectionCard
+        title="Distribucion por Categoria"
+        subtitle="Proporcion por categoria clinica"
+      >
         {pieChartData.length > 0 ? (
-          <>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                ...
-              </PieChart>
-            </ResponsiveContainer>
+          <div className="space-y-4">
+            <div className="h-[320px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={pieChartData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={72}
+                    outerRadius={118}
+                    paddingAngle={4}
+                    dataKey="value"
+                    nameKey="name"
+                  >
+                    {pieChartData.map((entry, index) => (
+                      <Cell
+                        key={`pie-${index}`}
+                        fill={CATEGORY_COLORS[entry.category]}
+                        stroke="#ffffff"
+                        strokeWidth={4}
+                      />
+                    ))}
+                  </Pie>
 
-            <div className="mt-4 grid grid-cols-2 gap-2 text-sm">
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "#fff",
+                      border: "1px solid #e2e8f0",
+                      borderRadius: "10px",
+                      boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+                      fontSize: "13px",
+                    }}
+                    formatter={
+                    ((value: number | string) => [
+                      `${value} mediciones`,
+                      "Cantidad",
+                    ]) as any
+                  }
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+
+            {/* Leyenda */}
+            <div className="grid grid-cols-1 gap-2">
               {pieChartData.map((item) => (
                 <div
                   key={item.category}
-                  className="flex items-center gap-2"
+                  className="flex items-center justify-between rounded-lg border border-slate-100 px-3 py-2 hover:bg-slate-50 transition-colors"
                 >
-                  <span
-                    className="h-3 w-3 rounded-full"
-                    style={{ backgroundColor: CATEGORY_COLORS[item.category] }}
-                  />
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="h-3 w-3 rounded-full"
+                      style={{
+                        backgroundColor: CATEGORY_COLORS[item.category],
+                      }}
+                    />
 
-                  <span className="text-slate-600 truncate">
-                    {item.name}
-                  </span>
+                    <span className="text-sm text-slate-700">
+                      {item.name}
+                    </span>
+                  </div>
 
-                  <span className="ml-auto font-semibold text-slate-800">
-                    {item.value}
-                  </span>
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm text-slate-500">
+                      {(
+                        (item.value /
+                          pieChartData.reduce(
+                            (sum, current) => sum + current.value,
+                            0
+                          )) *
+                        100
+                      ).toFixed(0)}
+                      %
+                    </span>
+
+                    <span className="font-semibold text-slate-900">
+                      {item.value}
+                    </span>
+                  </div>
                 </div>
               ))}
             </div>
-          </>
+          </div>
         ) : (
           <EmptyState
             icon={<Filter className="w-6 h-6" />}
